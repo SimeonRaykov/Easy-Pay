@@ -1,0 +1,33 @@
+.pull-right {
+    float: right !important; // Use of important emulates bootstrap
+}
+
+
+body > header > div > input[type=text]:nth-child(2){
+    margin-top:7%;
+}
+
+input {
+    width:100%;
+    background: none;
+    border: 1px solid rgb(97, 80, 80);
+    border-radius: 3px;
+    padding: 6px 20px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    font-size: 19px;
+    color:grey;
+    background-color:lightgrey;
+    text-align: center;
+    
+}
+
+.container{
+padding-left: 15%;
+padding-right:15%;
+}
+
+input:hover{
+    cursor:pointer;
+    background-color:grey;
+    }
