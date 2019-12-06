@@ -1,0 +1,31 @@
+h1 {
+    text-align: center;
+    padding: 50px;
+    margin-bottom: -7.5rem;
+}
+
+#myTable_wrapper {
+    margin: 40px 0;
+}
+
+body>div>form>div:nth-child(1)>input[type=date] {
+    margin-bottom: 15px;
+    margin-top: 90px;
+}
+
+body>div>form>div:nth-child(2)>input[type=date] {
+    margin-bottom: 20px;
+}
+
+body>div>form>div:nth-child(3)>input[type=button] {
+    margin-bottom: 0;
+margin-left:10%;
+}
+
+.pull-right {
+    float: right !important; // Use of important emulates bootstrap
+}
+
+#logOffBtn{
+    margin:5px;
+}
