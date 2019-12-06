@@ -3,6 +3,8 @@
 }
 
 
+
+
 body > header > div > input[type=text]:nth-child(2){
     margin-top:7%;
 }
@@ -25,6 +27,7 @@ input {
 .container{
 padding-left: 15%;
 padding-right:15%;
+padding-top:2%;
 }
 
 input:hover{

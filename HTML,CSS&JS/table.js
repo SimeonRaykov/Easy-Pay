@@ -11,8 +11,9 @@
         },
         success: function (data) {
             let i = 0;
-            console.log(data)
+
             for (let el in data) {
+                let numberDoc = data[el]['DOCUMENT_NUMBER'];
                 i += 1;
                 let currRow = $('<tr>').attr('role', 'row');
                 if (i % 2 == 0) {
@@ -21,12 +22,13 @@
                     currRow.addClass('odd');
                 }
                 currRow
-                    .append($('<td>' + data[el]['DOCUMENT_NUMBER'] + '</td>'))
+                    .append($('<td>' + (+numberDoc).toFixed(0) + '</td>'))
                     .append($('<td>' + data[el]['DOCUMENT_DATE'] + '</td>'))
                     .append($('<td>' + data[el]['CLIENT_NAME'] + '</td>'))
                     .append($('<td>' + data[el]['CLIENT_ADDRESS'] + '</td>'))
-                    .append($('<td>' + data[el]['DOCUMENT_NUMBER'] + ('</td>'))
-                        .append($('</tr>')));
+                    .append($('<td><button type="button" class="btn btn-success">Детайли</button></td>'))
+                    .append($('<td><button type="button" class="btn btn-warning">Издаване</button></td>'))
+                    .append($('</tr>'));
                 currRow.appendTo($('#tBody'));
             }
             $('#myTable').DataTable();
@@ -48,6 +50,10 @@
 
         localStorage.removeItem('username');
     })
+}());
+
+(function detailsEvent() {
+
 }());
 
 function deleteAllCookies() {

@@ -18,11 +18,17 @@
 </head>
 
 <body>
-    <div class="container">
 
-        <button type="submit" id="logOffBtn" value="Log off" class="btn btn-danger btn pull-right">Log off</button>
+    <header>
+        <div class="container">
+            <button type="submit" id="logOffBtn" value="Log off" class="btn btn-danger btn pull-right">Log off</button>
 
-        <h1>Easy Pay</h1>
+
+            <h1>Easy Pay</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
         <form action="" method="GET">
             <div>
                 <input type="date" name="date_from"> От дата
@@ -36,20 +42,23 @@
 
         </form>
 
-        <table id="myTable" class="display">
+        <table id="myTable" class="display text-center">
             <thead>
                 <tr>
                     <th>Номер на документ</th>
                     <th>Дата на издаване</th>
                     <th>Контрагент</th>
                     <th>Адрес</th>
-                    <th>Още</th>
+                    <th>Виж Още</th>
+                    <th>Издаване на номер</th>
                 </tr>
             </thead>
             <tbody id="tBody">
 
             </tbody>
-        </table>
+        </div>
+    </main>
+    </table>
     </div>
 
     <script src="table.js"></script>

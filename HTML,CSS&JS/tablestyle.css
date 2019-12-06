@@ -25,3 +25,7 @@ margin-left:10%;
 .pull-right {
     float: right !important; // Use of important emulates bootstrap
 }
+
+#logOffBtn{
+    margin:5px;
+}
