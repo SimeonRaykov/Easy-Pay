@@ -41,7 +41,7 @@ function callback() {
     let currUser = $('body > div > form > input[type=text]:nth-child(2)').val();
     localStorage.setItem('username', currUser);
     setTimeout(function () {
-        location.href = 'file:///C:/Users/suppo/Desktop/Table%20Easy%20Pay/git/html/table.html?date_from=&date_to=';
+        location.href = 'file:///C:/Users/suppo/Desktop/Table%20Easy%20Pay/git/html/table.html';
     }, 350);
 
 }
