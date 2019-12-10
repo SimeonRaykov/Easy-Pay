@@ -4,15 +4,20 @@
     let date_from = $('body > main > div > form > div:nth-child(1) > input[type=date]').val();
     let to_date = $('body > main > div > form > div:nth-child(2) > input[type=date]').val();
 
-    if (date_from == '' && to_date == '') {
+    if (date_from == '' || to_date == '') {
         (function setDefaultDates() {
             let currDate = new Date();
             let currDay = currDate.getDate();
             if (currDay < 10) {
                 currDay = `0${currDay}`;
             }
+
+            let currMonth = currDate.getMonth() + 1;
+            if (currMonth < 10) {
+                currMonth = `0${currMonth}`;
+            }
             $('body > main > div > form > div:nth-child(1) > input[type=date]').val(`${currDate.getFullYear()}-${currDate.getMonth()}-01`);
-            $('body > main > div > form > div:nth-child(2) > input[type=date]').val(`${currDate.getFullYear()}-${currDate.getMonth()+1}-${currDay}`);
+            $('body > main > div > form > div:nth-child(2) > input[type=date]').val(`${currDate.getFullYear()}-${currMonth}-${currDay}`);
             getInvoices();
 
         }());
@@ -37,9 +42,11 @@ function getInvoices() {
         date_from = `01-${currDate.getMonth()}-${currDate.getFullYear()}`;
         $('body > main > div > form > div:nth-child(1) > input[type=date]').val(`${currDate.getFullYear()}-${currDate.getMonth()}-01`);
         defaultVal = true;
-    } else if (to_date.includes('/')) {
-        to_date = `${currDate.getDate()}-${currDate.getMonth()+1}-${currDate.getFullYear()}`;
-        $('body > main > div > form > div:nth-child(2) > input[type=date]').val(`${currDate.getFullYear()}-${currDate.getMonth()+1}-${currDate.getDate()}`);
+    }
+
+    if (to_date.includes('/')) {
+        to_date = `${currDate.getFullYear()}-${currDate.getMonth()+1}-${currDate.getDate()}`;
+        //    $('body > main > div > form > div:nth-child(2) > input[type=date]').val(`${currDate.getFullYear()}-${currDate.getDate()}-0${currDate.getMonth()+1}`);
         defaultVal = true;
     }
 
@@ -50,14 +57,15 @@ function getInvoices() {
         data: {
             mode: 'list',
             date_from,
-            to_date
+            date_to: to_date
         },
         success: function (data) {
             callback(data);
             if (!defaultVal) {
                 fixVisualData();
+            } else {
+                defaultVal = false;
             }
-            defaultVal = false;
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.log(errorThrown);
@@ -84,9 +92,17 @@ function callback(data) {
             .append($('<td>' + data[el]['CLIENT_NAME'] + '</td>'))
             .append($('<td>' + data[el]['CLIENT_ADDRESS'] + '</td>'))
             .append($('<td><a href="detail.html?offerNum=' + truncateZeroes(numberDoc) + '"><button type="button" class="btn btn-success">Детайли</button></a></td>'))
-            .append($('<td><button type="button" class="btn btn-warning">Издаване</button></td>'))
+            .append($(`<td><button type="button" class="btn btn-warning publishNum" data-toggle="modal" data-id="${truncateZeroes(numberDoc)}" data-target="#exampleModalCenter">Издаване</button></td>`))
             .append($('</tr>'));
         currRow.appendTo($('#tBody'));
+
+        (function getBtn() {
+            $('.publishNum').on('click', (event) => {
+                let dataID = event.target.getAttribute('data-id');
+                $('#exampleModalLongTitle').text(`Вашият номер за плащане е: ${dataID}`)
+            })
+        }());
+
     }
     $('#myTable').DataTable();
 }

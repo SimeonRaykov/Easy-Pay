@@ -46,12 +46,12 @@ function callback(data) {
     DOCUMENT_NUMBER = (+DOCUMENT_NUMBER).toFixed(0);
 
     let DOCUMENT_SUM = data['SUM'];
-    $('body > header > div > div > input[type=text]:nth-child(1)').val(truncateZeroes(DOCUMENT_NUMBER));
-    $('body > header > div > div > input[type=text]:nth-child(2)').val(data['DOCUMENT_DATE']);
-    $('body > header > div > div > input[type=text]:nth-child(3)').val(data['CLIENT_NAME']);
-    $('body > header > div > div > input[type=text]:nth-child(4)').val(data['CLIENT_ADDRESS']);
-    $('body > header > div > div > input[type=text]:nth-child(5)').val(data['PAYMENT_DUE']);
-    $('body > header > div > div > input[type=text]:nth-child(6)').val(truncateZeroes(DOCUMENT_SUM));
+    $('body > header > div:nth-child(1) > div > div:nth-child(1) > input').val(truncateZeroes(DOCUMENT_NUMBER));
+    $('body > header > div:nth-child(1) > div > div:nth-child(2) > input').val(data['DOCUMENT_DATE']);
+    $('body > header > div:nth-child(1) > div > div:nth-child(3) > input').val(data['CLIENT_NAME']);
+    $('body > header > div:nth-child(1) > div > div:nth-child(4) > input').val(data['CLIENT_ADDRESS']);
+    $('body > header > div:nth-child(1) > div > div:nth-child(5) > input').val(data['PAYMENT_DUE']);
+    $('body > header > div:nth-child(1) > div > div:nth-child(6) > input').val(truncateZeroes(DOCUMENT_SUM));
     console.log(data);
 
     let i = 1;
@@ -78,8 +78,7 @@ function callback(data) {
 
 }
 
-
 function truncateZeroes(number) {
-    let a  = number.replace(/(\.[0-9]*?)0+$/, "$1");
-    return  a.replace(/\.$/, "");
+    let a = number.replace(/(\.[0-9]*?)0+$/, "$1");
+    return a.replace(/\.$/, "");
 }

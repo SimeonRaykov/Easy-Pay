@@ -3,7 +3,7 @@ $(function () {
         notification('success', 'Welcome Back');
 
         setTimeout(function () {
-            location.href = 'file:///C:/Users/suppo/Desktop/Table%20Easy%20Pay/git/html/table.html?date_from=&date_to=';
+            location.href = 'file:///C:/Users/suppo/Desktop/Table%20Easy%20Pay/git/html/table.html';
         }, 350);
     }
 });
@@ -28,7 +28,7 @@ function loginUser(username, password) {
         },
         dataType: "json",
         success: function (data, textStatus) {
-            callback();
+            callback(data);
         },
         error: () => {
             notification('error');
@@ -36,14 +36,18 @@ function loginUser(username, password) {
     });
 };
 
-function callback() {
-    notification('success', 'Login successful');
-    let currUser = $('body > div > form > input[type=text]:nth-child(2)').val();
-    localStorage.setItem('username', currUser);
-    setTimeout(function () {
-        location.href = 'file:///C:/Users/suppo/Desktop/Table%20Easy%20Pay/git/html/table.html';
-    }, 350);
+function callback(data) {
 
+    if (data['status'] === 'success') {
+        notification('success', 'Login successful');
+        let currUser = $('body > div > form > input[type=text]:nth-child(2)').val();
+        localStorage.setItem('username', currUser);
+        setTimeout(function () {
+            location.href = 'file:///C:/Users/suppo/Desktop/Table%20Easy%20Pay/git/html/table.html';
+        }, 350);
+    } else if (data['status'] === 'error') {
+        notification('error', data['data']);
+    }
 }
 
 function setCookie(cname, cvalue, exdays) {
