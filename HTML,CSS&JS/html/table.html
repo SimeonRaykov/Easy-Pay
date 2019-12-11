@@ -8,16 +8,21 @@
   <title>Document</title>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+  </script>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
   <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-  <link rel="stylesheet" href="C:\Users\suppo\Desktop\Table Easy Pay\git\css\tablestyle.css">
+  <link rel="stylesheet" href="../css/tablestyle.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-  <script src="C:\Users\suppo\Desktop\Table Easy Pay\git\js\notificationEvents.js"></script>
+  <script src="../js/notificationEvents.js"></script>
+
 </head>
 
 <body>
@@ -55,18 +60,19 @@
               </button>
             </div>
             <div class="modal-body">
-              ...
+              <div class="row justify-content-around">
+                <input type="text" class="col col-md-6 col-sm-12">
+                <p class="col col-md-5 col-sm-12 text-left text-sm-center">Email</p>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Връщане</button>
               <button type="button" class="btn btn-warning">Прати мейл</button>
-              
+
             </div>
           </div>
         </div>
       </div>
-
-
 
       <table id="myTable" class="display text-center">
         <thead>
@@ -86,9 +92,12 @@
   </main>
   </table>
   </div>
-
-  <script src="C:\Users\suppo\Desktop\Table Easy Pay\git\js\table.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <script type="text/javascript" src="../js/hmac-sha1.js"></script>
+  <script type="text/javascript" src="../js/sha1.js"></script>
+  <script src="../js/table.js"></script>
+
 
 </body>
 

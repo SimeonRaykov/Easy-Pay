@@ -3,7 +3,7 @@
 
         notification('success', 'Logout Successful');
         setTimeout(function () {
-            window.location.href = 'file:///C:/Users/suppo/Desktop/Table%20Easy%20Pay/git/html/login.html';
+            window.location.href = '../html/login.html';
         }, 350);
 
         localStorage.removeItem('username');
@@ -14,10 +14,10 @@
     $('#goBackBtn').on('click', () => {
         notification('info', 'Loading..');
         setTimeout(function () {
-            location.href = 'file:///C:/Users/suppo/Desktop/Table%20Easy%20Pay/git/html/table.html';
+            location.href = '../html/table.html';
         }, 350);
     })
-}())
+}());
 
 (function getDetails() {
 
@@ -34,6 +34,7 @@
         dataType: "json",
         success: function (data, textStatus) {
             callback(data);
+            console.log(data);
         },
         error: () => {
             notification('error');
@@ -52,7 +53,6 @@ function callback(data) {
     $('body > header > div:nth-child(1) > div > div:nth-child(4) > input').val(data['CLIENT_ADDRESS']);
     $('body > header > div:nth-child(1) > div > div:nth-child(5) > input').val(data['PAYMENT_DUE']);
     $('body > header > div:nth-child(1) > div > div:nth-child(6) > input').val(truncateZeroes(DOCUMENT_SUM));
-    console.log(data);
 
     let i = 1;
     for (let item of data['items']) {

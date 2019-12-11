@@ -1,5 +1,5 @@
  function notification(type, msg) {
-
+     toastr.clear();
      toastr.options = {
          "closeButton": false,
          "debug": false,
@@ -8,10 +8,10 @@
          "positionClass": "toast-top-right",
          "preventDuplicates": false,
          "onclick": null,
-         "showDuration": "1000",
+         "showDuration": "300",
          "hideDuration": "1000",
-         "timeOut": "0",
-         "extendedTimeOut": "0",
+         "timeOut": "5000",
+         "extendedTimeOut": "1000",
          "showEasing": "swing",
          "hideEasing": "linear",
          "showMethod": "fadeIn",
@@ -23,7 +23,6 @@
      } else if (type === 'error') {
          toastr.error(msg);
      } else if (type == 'info') {
-         toastr.options['positionClass'] = 'toast-top-left';
          toastr.info(msg);
      }
  };
