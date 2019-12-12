@@ -11,6 +11,7 @@
 }());
 
 (function detailsEvent() {
+
     $('#goBackBtn').on('click', () => {
         notification('info', 'Loading..');
         setTimeout(function () {
@@ -20,7 +21,7 @@
 }());
 
 (function getDetails() {
-
+    notification('info', 'Loading..');
     let url = location.href;
     let offerNum = url.substring(url.indexOf('?') + 10);
 
@@ -35,6 +36,7 @@
         success: function (data, textStatus) {
             callback(data);
             console.log(data);
+            clearNotification();
         },
         error: () => {
             notification('error');
@@ -81,4 +83,8 @@ function callback(data) {
 function truncateZeroes(number) {
     let a = number.replace(/(\.[0-9]*?)0+$/, "$1");
     return a.replace(/\.$/, "");
+}
+
+function clearNotification(){
+    toastr.clear();
 }

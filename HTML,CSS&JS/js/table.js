@@ -1,5 +1,4 @@
 ;
-
 (function getInvoicesByDate() {
     let date_from = $('body > main > div > form > div:nth-child(1) > input[type=date]').val();
     let to_date = $('body > main > div > form > div:nth-child(2) > input[type=date]').val();
@@ -61,6 +60,7 @@ function getInvoices() {
         },
         success: function (data) {
             callback(data);
+            clearNotification();
             if (!defaultVal) {
                 fixVisualData();
             } else {
@@ -120,88 +120,30 @@ function getEasyPayCodeVisual(easyPayCode) {
     $('#exampleModalLongTitle').text(`Вашият номер за плащане е: ${easyPayCode}`);
 }
 
-$(function postEmailEvent() {
-    $('#exampleModalCenter > div > div > div.modal-footer > button.btn.btn-warning').on('click', (e) => postEmail());
+(function postEmailEvent() {
+    $('#exampleModalCenter > div > div > div.modal-footer > button.btn.btn-warning').on('click', (e) => sendEmailToDB());
 }());
 
+function sendEmailToDB() {
 
-function postEmail(easyPayCode) {
-    let emailValue = $('#exampleModalCenter > div > div > div.modal-body > div > input').val();
-    let myEmail = '';
+    let email = $('#exampleModalCenter > div > div > div.modal-body > div > input').val();
 
-    Email.send({
-        Host: "smtp.yourisp.com",
-        Username: "username",
-        Password: "password",
-        To: `${emailValue}`,
-        From: `${myEmail}`,
-        Subject: "Easy Pay Code",
-        Body: "And this is the body"
-    });
-
-};
-
-function saveEasyPayCodeToDB(data, document_number) {
     $.ajax({
         url: 'http://192.168.1.107/datavend/api.php',
         method: 'POST',
         dataType: 'json',
         data: {
-            mode: 'save',
-            document_number: data,
-            document_number
+            mode: 'generateAndSave',
+            email: email
         },
-        success: function (data) {
-            notification('success', 'Successfully saved to DB');
-        },
+        success: function (data) {},
         error: function (jqXhr, textStatus, errorThrown) {
             console.log(errorThrown);
         }
-    })
-}
-
-function fixVisualData() {
-    let url = location.href;
-    let date_from = url.substring(url.indexOf('?') + 11);
-    date_from = date_from.substring(0, 10);
-
-    let to_date = url.substring(url.indexOf('?') + 30);
-
-    $('body > main > div > form > div:nth-child(1) > input[type=date]').val(date_from);
-    $('body > main > div > form > div:nth-child(2) > input[type=date]').val(to_date);
-
-}
-
-(function logOffEvent() {
-    $('#logOffBtn').on('click', () => {
-
-        setTimeout(function () {
-            location.href = '../html/login.html';
-        }, 350);
-        toastr.clear();
-        notification('success', 'Logout Successful');
-        localStorage.removeItem('username');
-    })
-}());
-
-function deleteAllCookies() {
-    var cookies = document.cookie.split(";");
-
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i];
-        var eqPos = cookie.indexOf("=");
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    }
-}
-
-function truncateZeroes(number) {
-    let a = number.replace(/(\.[0-9]*?)0+$/, "$1");
-    return a.replace(/\.$/, "");
-}
+    });
+};
 
 $(document).ready(function () {
-    toastr.clear()
 
     $('#exampleModalCenter').on('shown.bs.modal', function (event) {
         loading();
@@ -209,6 +151,7 @@ $(document).ready(function () {
         let dataID = triggerElement['0'].getAttribute('data-id');
         GenerateEasyPayCode(dataID);
     });
+
 });
 
 function GenerateEasyPayCode(offerNum) {
@@ -261,12 +204,66 @@ function GenerateEasyPayCode(offerNum) {
                 validateData(data);
             },
             error: function (jqXhr, textStatus, errorThrown) {
-                console.log(errorThrown);
+                notification('error', errorThrown);
+                $('#exampleModalLongTitle').text('Error');
             }
         });
     }
 }
 
-$(document.body).click(function () {
+(function fixVisualsOnModal() {
+
+    $(document.body).click(function () {
+        clearNotification();
+        clearEasyPayMsg();
+    });
+}());
+
+function clearEasyPayMsg() {
+    if (!($('#exampleModalCenter').is(':visible'))) {
+        $('#exampleModalLongTitle').text('Вашият номер за плащане е: ');
+    }
+}
+
+function fixVisualData() {
+    let url = location.href;
+    let date_from = url.substring(url.indexOf('?') + 11);
+    date_from = date_from.substring(0, 10);
+
+    let to_date = url.substring(url.indexOf('?') + 30);
+
+    $('body > main > div > form > div:nth-child(1) > input[type=date]').val(date_from);
+    $('body > main > div > form > div:nth-child(2) > input[type=date]').val(to_date);
+
+}
+
+(function logOffEvent() {
+    $('#logOffBtn').on('click', () => {
+
+        setTimeout(function () {
+            location.href = '../html/login.html';
+        }, 350);
+        notification('success', 'Logout Successful');
+        localStorage.removeItem('username');
+    })
+}());
+
+function clearNotification() {
     toastr.clear();
-});
+}
+
+function deleteAllCookies() {
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+}
+
+function truncateZeroes(number) {
+    let a = number.replace(/(\.[0-9]*?)0+$/, "$1");
+    return a.replace(/\.$/, "");
+}

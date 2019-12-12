@@ -7,7 +7,7 @@
     notification('success', 'Welcome Back');
 
     setTimeout(function () {
-      location.href = 'file:///C:/Users/suppo/Desktop/Table%20Easy%20Pay/git/html/table.html';
+      location.href = '../html/table.html';
     }, 350);
   }
 }());
@@ -49,7 +49,7 @@ function callback(data) {
     let currUser = $('body > div > form > input[type=text]:nth-child(2)').val();
     localStorage.setItem('username', currUser);
     setTimeout(function () {
-      location.href = 'file:///C:/Users/suppo/Desktop/Table%20Easy%20Pay/git/html/table.html';
+      location.href = '../html/table.html';
     }, 350);
   } else if (data['status'] === 'error') {
     notification('error', data['data']);
