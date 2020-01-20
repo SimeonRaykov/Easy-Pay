@@ -1,52 +1,66 @@
 ;
-(function getInvoicesByDate() {
-    let date_from = $('body > main > div > form > div:nth-child(1) > input[type=date]').val();
-    let to_date = $('body > main > div > form > div:nth-child(2) > input[type=date]').val();
 
-    if (date_from == '' || to_date == '') {
-        (function setDefaultDates() {
-            let currDate = new Date();
-            let currDay = currDate.getDate();
-            if (currDay < 10) {
-                currDay = `0${currDay}`;
-            }
+$(document).ready(function () {
 
-            let currMonth = currDate.getMonth() + 1;
-            if (currMonth < 10) {
-                currMonth = `0${currMonth}`;
-            }
-            $('body > main > div > form > div:nth-child(1) > input[type=date]').val(`${currDate.getFullYear()}-${currDate.getMonth()}-01`);
-            $('body > main > div > form > div:nth-child(2) > input[type=date]').val(`${currDate.getFullYear()}-${currMonth}-${currDay}`);
-            getInvoices();
+    $('body > main > div > div.row > div > label > input[type=checkbox]').on('click', () => {
+        if ($('body > main > div > div.row > div > label > input[type=checkbox]').is(":checked")) {
+            dataTable.clear().destroy();
+            getInvoices(true);
+        }
+        else{
+            dataTable.clear().destroy();
+            getInvoices(false)
+        }
+    })
 
-        }());
-    }
+    let isChecked = false;
 
-}());
+    getInvoices(isChecked);
 
-function getInvoices() {
+    $('#exampleModalCenter').on('shown.bs.modal', function (event) {
+        loading();
+        let triggerElement = $(event.relatedTarget); // Button that triggered the modal
+        let dataID = triggerElement['0'].getAttribute('data-id');
+        let email = triggerElement['0'].getAttribute('data-email');
+        $('#exampleModalCenter > div > div > div.modal-body > div > input').val(email);
+        GenerateEasyPayCode(dataID, email);
+    });
+
+    $("#exampleModalCenter").on("hidden.bs.modal", function () {
+        location.reload();
+    });
+
+});
+
+function getInvoices(filter) {
     loading();
-    let url = location.href;
-    let date_from = url.substring(url.indexOf('?') + 11);
-    date_from = date_from.substring(0, 10);
 
-    let to_date = url.substring(url.indexOf('?') + 30);
-
-    let defaultVal = false;
+    let date_from = getUrlParameter('date_from');
+    let to_date = getUrlParameter('date_to');
+    $('body > main > div > form > div:nth-child(1) > input').val(date_from);
+    $('body > main > div > form > div:nth-child(2) > input').val(to_date);
 
     // Check default dates
     let currDate = new Date();
+    let currMonth = currDate.getMonth() + 1;
+    if (date_from == undefined && to_date == undefined) {
 
-    if (date_from.includes('/')) {
-        date_from = `01-${currDate.getMonth()}-${currDate.getFullYear()}`;
-        $('body > main > div > form > div:nth-child(1) > input[type=date]').val(`${currDate.getFullYear()}-${currDate.getMonth()}-01`);
+        if (currMonth < 10) {
+            currMonth = `0${currMonth}`
+        }
+        date_from = `01-${currMonth}-${currDate.getFullYear()}`;
         defaultVal = true;
+
+        let dateFromParts = date_from.split('-');
+
+        $('body > main > div > form > div:nth-child(1) > input').val(`${dateFromParts[2]}-${dateFromParts[1]}-${dateFromParts[0]}`);
     }
 
-    if (to_date.includes('le')) {
-        to_date = `${currDate.getFullYear()}-${currDate.getMonth()+1}-${currDate.getDate()}`;
-        //    $('body > main > div > form > div:nth-child(2) > input[type=date]').val(`${currDate.getFullYear()}-${currDate.getDate()}-0${currDate.getMonth()+1}`);
-        defaultVal = true;
+    if (to_date == '') {
+        if (currMonth < 10) {
+            currMonth = `0${currMonth}`
+        }
+        $('body > main > div > form > div:nth-child(2) > input').val(`${currDate.getFullYear()}-${currMonth}-${currDate.getDate()}`);
     }
 
     $.ajax({
@@ -59,14 +73,8 @@ function getInvoices() {
             date_to: to_date
         },
         success: function (data) {
-            callback(data);
+            callback(data, filter);
             clearNotification();
-            if (!defaultVal) {
-                fixVisualData();
-            } else {
-                defaultVal = false;
-            }
-
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.log(errorThrown);
@@ -74,10 +82,15 @@ function getInvoices() {
     })
 };
 
-function callback(data) {
-    let i = 0;
-    let loaded = false;
+function callback(data, filter) {
 
+    if (filter == false || filter == undefined || filter == '') {
+        data = data.filter(e => {
+            return e.payment_issued != 1;
+        });
+    }
+
+    let i = 0;
     for (let el in data) {
         let numberDoc = data[el]['DOCUMENT_NUMBER'];
         i += 1;
@@ -90,15 +103,25 @@ function callback(data) {
         currRow
             .append($('<td>' + truncateZeroes(numberDoc) + '</td>'))
             .append($('<td>' + data[el]['DOCUMENT_DATE'] + '</td>'))
+            .append($('<td>' + data[el]['PAYMENT_DUE'] + '</td>'))
             .append($('<td>' + data[el]['CLIENT_NAME'] + '</td>'))
             .append($('<td>' + data[el]['CLIENT_ADDRESS'] + '</td>'))
+            .append($('<td>' + truncateZeroes(data[el]['price']) + '</td>'))
             .append($('<td><a href="detail.html?offerNum=' + truncateZeroes(numberDoc) + '"><button type="button" class="btn btn-success">Детайли</button></a></td>'))
-            .append($(`<td><button type="button" class="btn btn-warning publishNum" data-toggle="modal" data-id="${truncateZeroes(numberDoc)}" data-target="#exampleModalCenter">Издаване</button></td>`))
-            .append($('</tr>'));
+        if (data[el]['payment_issued'] == 0) {
+            currRow.append($(`<td><button type="button" class="btn btn-warning publishNum" data-toggle="modal" data-id="${truncateZeroes(numberDoc)}" data-email=${data[el]['EMAIL']} data-target="#exampleModalCenter">Издаване</button></td>`))
+        } else if (data[el]['payment_issued'] == 1) {
+            currRow.append($(`<td><button type="button" class="btn btn-warning publishNum" data-toggle="modal" data-id="${truncateZeroes(numberDoc)}" data-email=${data[el]['EMAIL']} data-target="#exampleModalCenter">Виж още</button></td>`))
+        }
+        currRow.append($('</tr>'));
         currRow.appendTo($('#tBody'));
 
     }
-    $('#myTable').DataTable();
+   dataTable = $('#myTable').DataTable({
+        "order": [
+            [0, "desc"]
+        ]
+    });
 }
 
 function validateData(data) {
@@ -142,17 +165,6 @@ function sendEmailToDB() {
         }
     });
 };
-
-$(document).ready(function () {
-
-    $('#exampleModalCenter').on('shown.bs.modal', function (event) {
-        loading();
-        let triggerElement = $(event.relatedTarget); // Button that triggered the modal
-        let dataID = triggerElement['0'].getAttribute('data-id');
-        GenerateEasyPayCode(dataID);
-    });
-
-});
 
 function GenerateEasyPayCode(offerNum) {
     $.ajax({
@@ -225,18 +237,6 @@ function clearEasyPayMsg() {
     }
 }
 
-function fixVisualData() {
-    let url = location.href;
-    let date_from = url.substring(url.indexOf('?') + 11);
-    date_from = date_from.substring(0, 10);
-
-    let to_date = url.substring(url.indexOf('?') + 30);
-
-    $('body > main > div > form > div:nth-child(1) > input[type=date]').val(date_from);
-    $('body > main > div > form > div:nth-child(2) > input[type=date]').val(to_date);
-
-}
-
 (function logOffEvent() {
     $('#logOffBtn').on('click', () => {
 
@@ -267,3 +267,18 @@ function truncateZeroes(number) {
     let a = number.replace(/(\.[0-9]*?)0+$/, "$1");
     return a.replace(/\.$/, "");
 }
+
+function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+};

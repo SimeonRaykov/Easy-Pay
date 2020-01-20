@@ -14,14 +14,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="../js/notificationEvents.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../css/detail.css">
 </head>
 
 <body>
     <header>
         <div class="container">
-            <button type="submit" id="goBackBtn" value="Go back" class="btn btn-success btn pull-left">Връщане</button>
-            <button type="submit" id="logOffBtn" value="Log off" class="btn btn-danger btn pull-right">Log off</button>
+            <div class="row">
+                <button type="submit" id="goBackBtn" value="Go back" class="btn btn-success btn ">Връщане</button>
+                <button class=" btn btn-warning offset-md-3" data-toggle="modal"
+                    data-target="#exampleModalCenter">Издаване</button>
+                <button type="submit" id="logOffBtn" value="Log off"
+                    class="offset-md-3 btn btn-danger btn pull-right ">Log
+                    off</button>
+            </div>
             <div class="container">
                 <div class="row">
                     <label class="col-md-4">Номер на документ</label>
@@ -41,7 +48,7 @@
                 </div>
                 <div class="row">
                     <label class="col-md-4" class="text-center">Срок на плащане</label>
-                    <input type="text"  class="col-md-8" disabled>
+                    <input type="text" class="col-md-8" disabled>
                 </div>
                 <div class="row">
                     <label class="col-md-4">Сума</label>
@@ -49,6 +56,34 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row justify-content-around">
+                            <input type="text" class="col col-md-6 col-sm-12">
+                            <p class="col col-md-5 col-sm-12 text-left text-sm-center">Email</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Връщане</button>
+                        <button type="button" class="btn btn-warning">Прати мейл</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
         <div class="container">
             <table id="table_details" class="display">
                 <thead>
@@ -68,6 +103,8 @@
         </div>
     </header>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript" src="../js/hmac-sha1.js"></script>
+  <script type="text/javascript" src="../js/sha1.js"></script>
     <script src="../js/detail.js"></script>
 </body>
 
